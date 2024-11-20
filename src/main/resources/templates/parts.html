@@ -16,6 +16,8 @@
             <br/>
             <span>Цена: </span><span th:text="${part.price}"></span>
             <br/>
+            <span>Остаток: </span><span th:text="${part.quantity}"></span>
+            <br/>
             <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/edit/' + ${part.id}}">Редактировать</a>
             <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/delete/' + ${part.id}}">Удалить</a>
         </li>

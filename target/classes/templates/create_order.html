@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Создать заказ</title>
+    <link rel="stylesheet" type="text/css" href="/css/orders/create_order.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Создать новый заказ</h2>
+
+        <form th:action="@{/orders/save}" method="post">
+            <label for="customerName">Имя клиента:</label>
+            <input type="text" id="customerName" name="customerName" required>
+            
+            <h3>Добавить товары:</h3>
+            <div th:each="part : ${parts}">
+                <label>
+                    <input type="checkbox" name="items[__${part.id}__].carPart" th:value="${part.id}">
+                    <span th:text="${part.partName}"></span> (Остаток: <span th:text="${part.quantity}"></span>)
+                </label>
+                <input type="number" name="items[__${part.id}__].quantity" placeholder="Количество">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Создать заказ</button>
+        </form>
+        
+        <a href="/orders" class="btn btn-secondary">Вернуться к заказам</a>
+    </div>
+</body>
+</html>
+
