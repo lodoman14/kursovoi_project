@@ -57,9 +57,10 @@ public class CarPartController {
     public String updatePart(@PathVariable("modelId") Long modelId, @PathVariable("id") Long id, @ModelAttribute("part") CarPart part) {
         CarPart existingPart = carPartService.getPartById(id);
         if (existingPart != null) {
-            existingPart.setPartName(part.getPartName()); // Обновляем наименование
-            existingPart.setArticleNumber(part.getArticleNumber()); // Обновляем артикул
-            existingPart.setPrice(part.getPrice()); // Обновляем цену
+            existingPart.setPartName(part.getPartName());
+            existingPart.setArticleNumber(part.getArticleNumber());
+            existingPart.setPrice(part.getPrice());
+            existingPart.setQuantity(part.getQuantity()); // Обновляем остаток
             carPartService.savePart(existingPart);
         }
         return "redirect:/brands/" + existingPart.getCarModel().getCarBrand().getId() + "/models/" + modelId + "/parts";
@@ -68,7 +69,8 @@ public class CarPartController {
     // Метод для удаления запчасти
     @GetMapping("/delete/{id}")
     public String deletePart(@PathVariable("modelId") Long modelId, @PathVariable("id") Long id) {
-        carPartService.deletePart(id);
+        carPartService.deletePart(id); // Удаляем модель
         return "redirect:/brands/" + modelId + "/models/" + modelId + "/parts";
     }
 }
+

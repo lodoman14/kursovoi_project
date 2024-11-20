@@ -19,16 +19,20 @@ public class CarPart {
     @Column(nullable = false)
     private Double price; // Цена
 
+    @Column(nullable = false)
+    private Integer quantity; // Остатки на складе
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "model_id", nullable = false)
     private CarModel carModel;
 
     public CarPart() {}
 
-    public CarPart(String partName, String articleNumber, Double price, CarModel carModel) {
+    public CarPart(String partName, String articleNumber, Double price, Integer quantity, CarModel carModel) {
         this.partName = partName;
         this.articleNumber = articleNumber;
         this.price = price;
+        this.quantity = quantity;
         this.carModel = carModel;
     }
 
@@ -63,6 +67,14 @@ public class CarPart {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public CarModel getCarModel() {

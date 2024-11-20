@@ -51,5 +51,11 @@ public class CarBrandController {
         carBrandService.deleteBrand(id);
         return "redirect:/brands";
     }
+
+    @GetMapping("/orders/new")
+    public String createOrder(Model model) {
+        model.addAttribute("brands", carBrandService.getAllBrands());
+        return "order_create";
+    }
 }
 

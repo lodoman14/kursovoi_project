@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Создать заказ</title>
+</head>
+<body>
+    <h1>Создать заказ</h1>
+    <form th:action="@{/orders/save}" method="post">
+        <label>Имя заказчика:</label>
+        <input type="text" name="customerName" required />
+        <table>
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>Артикул</th>
+                    <th>Цена</th>
+                    <th>Остаток</th>
+                    <th>Количество</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="brand : ${brands}">
+                    <td colspan="5"><strong th:text="${brand.brandName}"></strong></td>
+                </tr>
+                <tr th:each="model : ${brand.models}">
+                    <td colspan="5">&nbsp;&nbsp;&nbsp;<strong th:text="${model.modelName}"></strong></td>
+                </tr>
+                <tr th:each="part : ${model.parts}">
+                    <td th:text="${part.partName}"></td>
+                    <td th:text="${part.articleNumber}"></td>
+                    <td th:text="${part.price}"></td>
+                    <td th:text="${part.quantity}"></td>
+                    <td><input type="number" name="items[${part.id}]" min="0" max="${part.quantity}" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit">Создать заказ</button>
+    </form>
+</body>
+</html>
+

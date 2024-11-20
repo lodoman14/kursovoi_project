@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Список брендов автомобилей</title>
     <link rel="stylesheet" type="text/css" href="/css/brands/view_brands.css">
+    <title>Список брендов</title>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>Список брендов автомобилей</h2>
-            <a href="/brands/new" class="add-brand">Добавить новый бренд</a>
-        </div>
-
-        <ul class="brand-list">
-            <li th:each="brand : ${brands}">
-                <span class="brand-name" th:text="${brand.brandName}"></span>
-                <div class="action-buttons">
-                    <a th:href="@{'/brands/' + ${brand.id} + '/models'}" class="btn btn-view">Просмотреть модели</a>
-                    <a th:href="@{'/brands/edit/' + ${brand.id}}" class="btn btn-edit">Редактировать</a>
-                    <a th:href="@{'/brands/delete/' + ${brand.id}}" class="btn btn-delete">Удалить</a>
-                </div>
-            </li>
-        </ul>
-    </div>
+    <h1>Список брендов</h1>
+    <a href="/brands/orders/new" class="btn btn-primary">Сформировать заказ</a>
+    <ul>
+        <li th:each="brand : ${brands}">
+            <span th:text="${brand.brandName}"></span>
+            <a th:href="@{'/brands/edit/' + ${brand.id}}">Редактировать</a>
+            <a th:href="@{'/brands/delete/' + ${brand.id}}">Удалить</a>
+        </li>
+    </ul>
+    <a href="/brands/new">Добавить новый бренд</a>
 </body>
 </html>
