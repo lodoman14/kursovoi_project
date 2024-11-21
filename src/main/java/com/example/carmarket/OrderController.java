@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/orders")
@@ -35,8 +37,50 @@ public class OrderController {
 
     // Сохранение нового заказа
     @PostMapping("/save")
-    public String saveOrder(@ModelAttribute("order") Order order) {
-        orderService.saveOrder(order);
+    public String saveOrder(@ModelAttribute("order") Order order,
+                            @RequestParam Map<String, String> allParams,
+                            Model model) {
+        List<OrderItem> items = new ArrayList<>();
+
+        for (String key : allParams.keySet()) {
+            if (key.startsWith("items[") && key.endsWith("].selected")) {
+                String partIdKey = key.replace(".selected", ".carPartId");
+                String quantityKey = key.replace(".selected", ".quantity");
+
+                try {
+                    Long partId = Long.parseLong(allParams.get(partIdKey));
+                    Integer quantity = Integer.parseInt(allParams.get(quantityKey));
+
+                    if (quantity > 0) {
+                        CarPart part = carPartService.getPartById(partId);
+                        if (part != null) {
+                            items.add(new OrderItem(part, quantity));
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    model.addAttribute("error", "Некорректные данные. Проверьте ввод количества.");
+                    return "create_order";
+                }
+            }
+        }
+
+        if (items.isEmpty()) {
+            model.addAttribute("error", "Не выбрано ни одной запчасти.");
+            return "create_order";
+        }
+
+        for (OrderItem item : items) {
+            order.addItem(item);
+        }
+
+        try {
+            orderService.saveOrder(order);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("parts", carPartService.getAllParts());
+            return "create_order";
+        }
+
         return "redirect:/orders";
     }
 

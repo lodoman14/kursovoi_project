@@ -12,5 +12,11 @@ public class HomeController {
         model.addAttribute("message", "Welcome to the Car Market!");
         return "home";  // Это будет ссылаться на шаблон home.html
     }
+
+    @GetMapping("/error")
+    public String errorPage(Model model) {
+        model.addAttribute("message", "Произошла ошибка. Пожалуйста, попробуйте позже.");
+        return "error"; // Это будет ссылаться на шаблон error.html
+    }
 }
 

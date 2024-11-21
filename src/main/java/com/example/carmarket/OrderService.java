@@ -18,7 +18,7 @@ public class OrderService {
         for (OrderItem item : order.getItems()) {
             CarPart part = item.getCarPart();
             if (part.getQuantity() < item.getQuantity()) {
-                throw new IllegalArgumentException("Insufficient stock for part: " + part.getPartName());
+                throw new IllegalArgumentException("Недостаточно товара на складе: " + part.getPartName());
             }
             part.setQuantity(part.getQuantity() - item.getQuantity());
             carPartService.savePart(part);

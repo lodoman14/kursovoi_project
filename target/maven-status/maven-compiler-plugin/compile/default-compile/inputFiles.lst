@@ -1,5 +1,6 @@
 /root/kursovoi_project/src/main/java/com/example/carmarket/CarPart.java
 /root/kursovoi_project/src/main/java/com/example/carmarket/CarBrandService.java
+/root/kursovoi_project/src/main/java/com/example/carmarket/GlobalExceptionHandler.java
 /root/kursovoi_project/src/main/java/com/example/carmarket/CarPartService.java
 /root/kursovoi_project/src/main/java/com/example/carmarket/CarPartRepository.java
 /root/kursovoi_project/src/main/java/com/example/carmarket/HomeController.java
