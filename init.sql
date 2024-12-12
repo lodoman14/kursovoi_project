@@ -23,10 +23,29 @@ CREATE TABLE IF NOT EXISTS car_parts (
     CONSTRAINT FK_model FOREIGN KEY (model_id) REFERENCES car_models(id)
 );
 
+-- Создаем таблицу order_status для хранения статусов заказов
+CREATE TABLE IF NOT EXISTS order_status (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    status_name VARCHAR(255) NOT NULL
+);
+
+-- Заполняем таблицу order_status начальными значениями
+INSERT INTO order_status (status_name) VALUES
+('Создан счет'),
+('Оплата по счету получена'),
+('Товар собран и готов к отгрузке'),
+('Доставка до клиента'),
+('Доставка осуществлена');
+
 -- Создаем таблицу orders
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    customer_name VARCHAR(255) NOT NULL
+    customer_name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    status_id BIGINT DEFAULT 1,
+    CONSTRAINT FK_order_status FOREIGN KEY (status_id) REFERENCES order_status(id)
 );
 
 -- Создаем таблицу order_items
@@ -38,4 +57,3 @@ CREATE TABLE IF NOT EXISTS order_items (
     CONSTRAINT FK_part FOREIGN KEY (part_id) REFERENCES car_parts(id),
     CONSTRAINT FK_order FOREIGN KEY (order_id) REFERENCES orders(id)
 );
-

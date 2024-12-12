@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/brands/{brandId}/models/{modelId}/parts")
+@RequestMapping("/parts")
 public class CarPartController {
 
     @Autowired
@@ -15,60 +17,73 @@ public class CarPartController {
     @Autowired
     private CarModelService carModelService;
 
-    // Метод для отображения списка запчастей для модели
     @GetMapping
-    public String listParts(@PathVariable("modelId") Long modelId, Model model) {
-        CarModel carModel = carModelService.getModelById(modelId);
-        model.addAttribute("parts", carPartService.getPartsByModel(carModel));
-        model.addAttribute("carModel", carModel); // Передаем объект модели в шаблон
-        return "parts"; // Шаблон parts.html
+    public String listParts(Model model) {
+        model.addAttribute("parts", carPartService.getAllParts());
+        return "parts_list";
     }
 
-    // Метод для отображения формы создания новой запчасти
-    @GetMapping("/new")
-    public String showCreateForm(@PathVariable("modelId") Long modelId, Model model) {
-        CarModel carModel = carModelService.getModelById(modelId);
-        model.addAttribute("part", new CarPart());
-        model.addAttribute("carModel", carModel);
-        return "create_part"; // Шаблон create_part.html
-    }
-
-    // Метод для сохранения новой запчасти
-    @PostMapping("/save")
-    public String savePart(@PathVariable("modelId") Long modelId, @ModelAttribute("part") CarPart part) {
-        CarModel carModel = carModelService.getModelById(modelId);
-        part.setCarModel(carModel);
-        carPartService.savePart(part);
-        return "redirect:/brands/" + carModel.getCarBrand().getId() + "/models/" + modelId + "/parts";
-    }
-
-    // Метод для отображения формы редактирования запчасти
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("modelId") Long modelId, @PathVariable("id") Long id, Model model) {
-        CarPart part = carPartService.getPartById(id);
-        CarModel carModel = carModelService.getModelById(modelId);
-        model.addAttribute("part", part);
-        model.addAttribute("carModel", carModel); // Передаем объект модели
-        return "edit_part"; // Шаблон edit_part.html
-    }
-
-    // Метод для обновления запчасти
-    @PostMapping("/update/{id}")
-    public String updatePart(@PathVariable("modelId") Long modelId, @PathVariable("id") Long id, @ModelAttribute("part") CarPart part) {
-        CarPart existingPart = carPartService.getPartById(id);
-        if (existingPart != null) {
-            existingPart.setPartName(part.getPartName()); // Обновляем наименование
-            existingPart.setArticleNumber(part.getArticleNumber()); // Обновляем артикул
-            existingPart.setPrice(part.getPrice()); // Обновляем цену
-            carPartService.savePart(existingPart);
+    @GetMapping("/model/{id}")
+    public String listPartsByModel(@PathVariable("id") Long modelId, Model model) {
+        CarModel modelEntity = carModelService.getModelById(modelId);
+        if (modelEntity != null) {
+            model.addAttribute("parts", carPartService.getPartsByModel(modelEntity));
+        } else {
+            model.addAttribute("error", "Модель не найдена");
         }
-        return "redirect:/brands/" + existingPart.getCarModel().getCarBrand().getId() + "/models/" + modelId + "/parts";
+        return "parts_list";
     }
 
-    // Метод для удаления запчасти
+    @GetMapping("/new")
+    public String createPartForm(Model model) {
+        model.addAttribute("part", new CarPart());
+        model.addAttribute("models", carModelService.getAllModels());
+        return "create_part";
+    }
+
+    @PostMapping("/save")
+    public String savePart(@ModelAttribute("part") CarPart part, Model model) {
+        try {
+            carPartService.savePart(part);
+            return "redirect:/parts";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при сохранении запчасти");
+            return "create_part";
+        }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editPartForm(@PathVariable("id") Long partId, Model model) {
+        CarPart part = carPartService.getPartById(partId);
+        if (part != null) {
+            model.addAttribute("part", part);
+            model.addAttribute("models", carModelService.getAllModels());
+            return "edit_part";
+        } else {
+            model.addAttribute("error", "Запчасть не найдена");
+            return "redirect:/parts";
+        }
+    }
+
+    @PostMapping("/update")
+    public String updatePart(@ModelAttribute("part") CarPart part, Model model) {
+        try {
+            carPartService.savePart(part);
+            return "redirect:/parts";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при обновлении запчасти");
+            return "edit_part";
+        }
+    }
+
     @GetMapping("/delete/{id}")
-    public String deletePart(@PathVariable("modelId") Long modelId, @PathVariable("id") Long id) {
-        carPartService.deletePart(id);
-        return "redirect:/brands/" + modelId + "/models/" + modelId + "/parts";
+    public String deletePart(@PathVariable("id") Long partId, Model model) {
+        try {
+            carPartService.deletePart(partId);
+            return "redirect:/parts";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при удалении запчасти");
+            return "redirect:/parts";
+        }
     }
 }

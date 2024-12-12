@@ -3,9 +3,11 @@ com/example/carmarket/CarModel.class
 com/example/carmarket/Order.class
 com/example/carmarket/CarPart.class
 com/example/carmarket/OrderItemRepository.class
+com/example/carmarket/OrderStatus.class
 com/example/carmarket/OrderController.class
 com/example/carmarket/CarController.class
 com/example/carmarket/CarRepository.class
+com/example/carmarket/OrderStatusRepository.class
 com/example/carmarket/CarPartService.class
 com/example/carmarket/CarPartController.class
 com/example/carmarket/HomeController.class

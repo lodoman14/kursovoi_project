@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/brands/{brandId}/models")
+@RequestMapping("/models")
 public class CarModelController {
 
     @Autowired
@@ -15,58 +17,73 @@ public class CarModelController {
     @Autowired
     private CarBrandService carBrandService;
 
-    // Список моделей для конкретного бренда
     @GetMapping
-    public String listModels(@PathVariable("brandId") Long brandId, Model model) {
+    public String listModels(Model model) {
+        model.addAttribute("models", carModelService.getAllModels());
+        return "models_list";
+    }
+
+    @GetMapping("/brand/{id}")
+    public String listModelsByBrand(@PathVariable("id") Long brandId, Model model) {
         CarBrand brand = carBrandService.getBrandById(brandId);
-        model.addAttribute("models", carModelService.getModelsByBrand(brand));
-        model.addAttribute("brand", brand); // Передаем объект бренда в модель
-        return "models"; // Шаблон models.html
-    }
-
-    // Форма для создания новой модели
-    @GetMapping("/new")
-    public String showCreateForm(@PathVariable("brandId") Long brandId, Model model) {
-        CarBrand brand = carBrandService.getBrandById(brandId);
-        model.addAttribute("model", new CarModel());
-        model.addAttribute("brand", brand); // Передаем бренд для отображения названия в форме
-        return "create_model"; // Шаблон create_model.html
-    }
-
-    // Сохранение новой модели
-    @PostMapping("/save")
-    public String saveModel(@PathVariable("brandId") Long brandId, @ModelAttribute("model") CarModel model) {
-        CarBrand brand = carBrandService.getBrandById(brandId);
-        model.setCarBrand(brand); // Устанавливаем бренд для модели
-        carModelService.saveModel(model);
-        return "redirect:/brands/" + brandId + "/models"; // Перенаправляем на список моделей
-    }
-
-    // Форма для редактирования модели
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("brandId") Long brandId, @PathVariable("id") Long id, Model model) {
-        CarModel existingModel = carModelService.getModelById(id);
-        model.addAttribute("model", existingModel); // Передаем существующую модель
-        model.addAttribute("brandId", brandId); // Передаем ID бренда для ссылки
-        return "edit_model"; // Шаблон edit_model.html
-    }
-
-    // Обновление существующей модели
-    @PostMapping("/update/{id}")
-    public String updateModel(@PathVariable("brandId") Long brandId, @PathVariable("id") Long id, @ModelAttribute("model") CarModel model) {
-        CarModel existingModel = carModelService.getModelById(id);
-        if (existingModel != null) {
-            existingModel.setModelName(model.getModelName()); // Обновляем имя модели
-            carModelService.saveModel(existingModel); // Сохраняем изменения
+        if (brand != null) {
+            model.addAttribute("models", carModelService.getModelsByBrand(brand));
+        } else {
+            model.addAttribute("error", "Марка не найдена");
         }
-        return "redirect:/brands/" + brandId + "/models"; // Перенаправляем на список моделей
+        return "models_list";
     }
 
-    // Удаление модели
+    @GetMapping("/new")
+    public String createModelForm(Model model) {
+        model.addAttribute("model", new CarModel());
+        model.addAttribute("brands", carBrandService.getAllBrands());
+        return "create_model";
+    }
+
+    @PostMapping("/save")
+    public String saveModel(@ModelAttribute("model") CarModel carModel, Model model) {
+        try {
+            carModelService.saveModel(carModel);
+            return "redirect:/models";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при сохранении модели");
+            return "create_model";
+        }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editModelForm(@PathVariable("id") Long modelId, Model model) {
+        CarModel carModel = carModelService.getModelById(modelId);
+        if (carModel != null) {
+            model.addAttribute("model", carModel);
+            model.addAttribute("brands", carBrandService.getAllBrands());
+            return "edit_model";
+        } else {
+            model.addAttribute("error", "Модель не найдена");
+            return "redirect:/models";
+        }
+    }
+
+    @PostMapping("/update")
+    public String updateModel(@ModelAttribute("model") CarModel carModel, Model model) {
+        try {
+            carModelService.saveModel(carModel);
+            return "redirect:/models";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при обновлении модели");
+            return "edit_model";
+        }
+    }
+
     @GetMapping("/delete/{id}")
-    public String deleteModel(@PathVariable("brandId") Long brandId, @PathVariable("id") Long id) {
-        carModelService.deleteModel(id); // Удаляем модель
-        return "redirect:/brands/" + brandId + "/models"; // Перенаправляем на список моделей
+    public String deleteModel(@PathVariable("id") Long modelId, Model model) {
+        try {
+            carModelService.deleteModel(modelId);
+            return "redirect:/models";
+        } catch (Exception e) {
+            model.addAttribute("error", "Ошибка при удалении модели");
+            return "redirect:/models";
+        }
     }
 }
-

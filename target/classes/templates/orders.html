@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Список заказов</title>
-    <link rel="stylesheet" type="text/css" href="/css/orders/orders.css">
-</head>
-<body>
-    <div class="container">
-        <h2>Список заказов</h2>
-
-        <ul>
-            <li th:each="order : ${orders}">
-                <span th:text="'Заказ #' + ${order.id} + ' от ' + ${order.customerName}"></span>
-                <a th:href="@{'/orders/' + ${order.id}}" class="btn btn-view">Просмотр</a>
-            </li>
-        </ul>
-
-        <a href="/orders/new" class="btn btn-primary">Создать заказ</a>
-        <a href="/brands" class="btn btn-secondary">Вернуться к брендам</a>
-    </div>
-</body>
-</html>
-
+<ul>
+    <li th:each="order : ${orders}">
+        <span th:text="'Заказ #' + ${order.id} + ' от ' + ${order.customerName}"></span>
+        <span>Статус: <span th:text="${order.status.statusName}"></span></span>
+        <form th:action="@{'/orders/' + ${order.id} + '/status/update'}" method="post">
+            <select name="statusId" required>
+                <option th:each="status : ${statuses}" th:value="${status.id}" th:text="${status.statusName}"></option>
+            </select>
+            <button type="submit">Обновить статус</button>
+        </form>
+    </li>
+</ul>

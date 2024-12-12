@@ -5,23 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String customerName;
+    private String address;
+    private String phone;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderItem> items = new ArrayList<>();
 
-    public Order() {}
-
-    public Order(String customerName) {
-        this.customerName = customerName;
+    public Order() {
     }
 
     public Long getId() {
@@ -40,6 +37,22 @@ public class Order {
         this.customerName = customerName;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public List<OrderItem> getItems() {
         return items;
     }
@@ -47,15 +60,4 @@ public class Order {
     public void setItems(List<OrderItem> items) {
         this.items = items;
     }
-
-    public void addItem(OrderItem item) {
-        items.add(item);
-        item.setOrder(this);
-    }
-
-    public void removeItem(OrderItem item) {
-        items.remove(item);
-        item.setOrder(null);
-    }
 }
-

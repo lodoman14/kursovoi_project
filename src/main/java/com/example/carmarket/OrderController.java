@@ -19,23 +19,13 @@ public class OrderController {
     @Autowired
     private CarPartService carPartService;
 
-    // Список всех заказов
-    @GetMapping
-    public String listOrders(Model model) {
-        List<Order> orders = orderService.getAllOrders();
-        model.addAttribute("orders", orders);
-        return "orders";
-    }
-
-    // Форма для создания нового заказа
     @GetMapping("/new")
     public String createOrderForm(Model model) {
+        model.addAttribute("parts", carPartService.getAllParts());
         model.addAttribute("order", new Order());
-        model.addAttribute("parts", carPartService.getAllParts()); // Передаем список всех запчастей
         return "create_order";
     }
 
-    // Сохранение нового заказа
     @PostMapping("/save")
     public String saveOrder(@ModelAttribute("order") Order order,
                             @RequestParam Map<String, String> allParams,
@@ -44,8 +34,9 @@ public class OrderController {
 
         for (String key : allParams.keySet()) {
             if (key.startsWith("items[") && key.endsWith("].selected")) {
-                String partIdKey = key.replace(".selected", ".carPartId");
-                String quantityKey = key.replace(".selected", ".quantity");
+                String baseKey = key.substring(0, key.indexOf(".selected"));
+                String partIdKey = baseKey + ".carPartId";
+                String quantityKey = baseKey + ".quantity";
 
                 try {
                     Long partId = Long.parseLong(allParams.get(partIdKey));
@@ -65,34 +56,14 @@ public class OrderController {
         }
 
         if (items.isEmpty()) {
-            model.addAttribute("error", "Не выбрано ни одной запчасти.");
+            model.addAttribute("error", "Не выбраны товары для заказа.");
             return "create_order";
         }
 
-        for (OrderItem item : items) {
-            order.addItem(item);
-        }
+        order.setItems(items);
+        orderService.saveOrder(order);
 
-        try {
-            orderService.saveOrder(order);
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("parts", carPartService.getAllParts());
-            return "create_order";
-        }
-
-        return "redirect:/orders";
-    }
-
-    // Просмотр деталей заказа
-    @GetMapping("/{id}")
-    public String viewOrder(@PathVariable("id") Long id, Model model) {
-        Order order = orderService.getOrderById(id);
-        if (order == null) {
-            return "redirect:/orders";
-        }
-        model.addAttribute("order", order);
-        return "view_order";
+        return "redirect:/";
     }
 }
 
