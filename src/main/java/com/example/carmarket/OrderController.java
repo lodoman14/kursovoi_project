@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private OrderService orderService;
@@ -40,6 +44,9 @@ public class OrderController {
     public String saveOrder(@ModelAttribute("order") Order order,
                             @RequestParam Map<String, String> allParams,
                             Model model) {
+        logger.info("Received order: {}", order);
+        logger.info("Received parameters: {}", allParams);
+
         List<OrderItem> items = new ArrayList<>();
 
         for (String key : allParams.keySet()) {
@@ -75,6 +82,7 @@ public class OrderController {
 
         try {
             orderService.saveOrder(order);
+            logger.info("Order saved successfully: {}", order);
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("parts", carPartService.getAllParts());
@@ -94,5 +102,11 @@ public class OrderController {
         model.addAttribute("order", order);
         return "view_order";
     }
-}
 
+    // Обновление статуса заказа
+    @PostMapping("/updateStatus/{id}")
+    public String updateOrderStatus(@PathVariable("id") Long id, @RequestParam("status") String status) {
+        orderService.updateOrderStatus(id, status);
+        return "redirect:/orders";
+    }
+}

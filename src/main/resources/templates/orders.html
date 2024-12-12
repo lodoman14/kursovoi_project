@@ -12,6 +12,15 @@
             <li th:each="order : ${orders}">
                 <span th:text="'Заказ #' + ${order.id} + ' от ' + ${order.customerName}"></span>
                 <a th:href="@{'/orders/' + ${order.id}}" class="btn btn-view">Просмотр</a>
+                <form th:action="@{'/orders/updateStatus/' + ${order.id}}" method="post" style="display:inline;">
+                    <select name="status" onchange="this.form.submit()">
+                        <option th:selected="${order.status == 'Создан счет'}" value="Создан счет">Создан счет</option>
+                        <option th:selected="${order.status == 'Оплата получена'}" value="Оплата получена">Оплата получена</option>
+                        <option th:selected="${order.status == 'Готов к отгрузке'}" value="Готов к отгрузке">Готов к отгрузке</option>
+                        <option th:selected="${order.status == 'Доставка до клиента'}" value="Доставка до клиента">Доставка до клиента</option>
+                        <option th:selected="${order.status == 'Закрыт'}" value="Закрыт">Закрыт</option>
+                    </select>
+                </form>
             </li>
         </ul>
 
@@ -20,4 +29,3 @@
     </div>
 </body>
 </html>
-

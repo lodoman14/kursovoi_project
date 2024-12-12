@@ -15,13 +15,29 @@ public class Order {
     @Column(nullable = false)
     private String customerName;
 
+    @Column
+    private String phoneNumber;
+
+    @Column
+    private String email;
+
+    @Column
+    private String deliveryAddress;
+
+    @Column
+    private String status;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
     public Order() {}
 
-    public Order(String customerName) {
+    public Order(String customerName, String phoneNumber, String email, String deliveryAddress) {
         this.customerName = customerName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.deliveryAddress = deliveryAddress;
+        this.status = "Создан счет";
     }
 
     public Long getId() {
@@ -38,6 +54,38 @@ public class Order {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<OrderItem> getItems() {
@@ -58,4 +106,3 @@ public class Order {
         item.setOrder(null);
     }
 }
-

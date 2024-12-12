@@ -8,17 +8,20 @@
     <div class="container">
         <h2>Заказ #<span th:text="${order.id}"></span></h2>
         <p>Клиент: <span th:text="${order.customerName}"></span></p>
-        
+        <p>Номер телефона: <span th:text="${order.phoneNumber}"></span></p>
+        <p>Email: <span th:text="${order.email}"></span></p>
+        <p>Адрес доставки: <span th:text="${order.deliveryAddress}"></span></p>
+        <p>Статус: <span th:text="${order.status}"></span></p>
+
         <h3>Товары:</h3>
         <ul>
             <li th:each="item : ${order.items}">
-                <span th:text="${item.carPart.partName}"></span> - 
+                <span th:text="${item.carPart.partName}"></span> -
                 <span th:text="'Количество: ' + ${item.quantity}"></span>
             </li>
         </ul>
-        
+
         <a href="/orders" class="btn btn-secondary">Вернуться к заказам</a>
     </div>
 </body>
 </html>
-

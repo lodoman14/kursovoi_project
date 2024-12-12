@@ -26,7 +26,11 @@ CREATE TABLE IF NOT EXISTS car_parts (
 -- Создаем таблицу orders
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    customer_name VARCHAR(255) NOT NULL
+    customer_name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    email VARCHAR(255),
+    delivery_address VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'Создан счет'
 );
 
 -- Создаем таблицу order_items
@@ -38,4 +42,3 @@ CREATE TABLE IF NOT EXISTS order_items (
     CONSTRAINT FK_part FOREIGN KEY (part_id) REFERENCES car_parts(id),
     CONSTRAINT FK_order FOREIGN KEY (order_id) REFERENCES orders(id)
 );
-
