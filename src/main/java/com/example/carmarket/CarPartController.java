@@ -60,6 +60,7 @@ public class CarPartController {
             existingPart.setPartName(part.getPartName()); // Обновляем наименование
             existingPart.setArticleNumber(part.getArticleNumber()); // Обновляем артикул
             existingPart.setPrice(part.getPrice()); // Обновляем цену
+            existingPart.setQuantity(part.getQuantity()); // Обновляем остаток
             carPartService.savePart(existingPart);
         }
         return "redirect:/brands/" + existingPart.getCarModel().getCarBrand().getId() + "/models/" + modelId + "/parts";
@@ -72,3 +73,4 @@ public class CarPartController {
         return "redirect:/brands/" + modelId + "/models/" + modelId + "/parts";
     }
 }
+

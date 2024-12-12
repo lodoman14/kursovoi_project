@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Редактировать бренд</title>
-    <!-- Подключаем CSS для страницы редактирования брендов -->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/brands/edit_brand.css}">
+    <title>Редактировать запчасть</title>
+    <link rel="stylesheet" th:href="@{/css/parts/edit_part.css}" />
 </head>
+
 <body>
     <div class="container">
-        <h2>Редактировать бренд</h2>
-        <form th:action="@{/brands/update/{id}(id=${brand.id})}" th:object="${brand}" method="post" class="form">
-            <div class="form-group">
-                <label for="brandName">Название бренда</label>
-                <input type="text" id="brandName" th:field="*{brandName}" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <h2>Редактировать запчасть для модели: <span th:text="${carModel.modelName}"></span></h2>
+        <form th:action="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/update/' + ${part.id}}" method="post">
+            <label>Наименование:</label>
+            <input type="text" name="partName" th:value="${part.partName}" required />
+
+            <label>Артикул:</label>
+            <input type="text" name="articleNumber" th:value="${part.articleNumber}" required />
+
+            <label>Цена:</label>
+            <input type="number" name="price" th:value="${part.price}" step="0.01" required />
+
+            <label>Остаток:</label>
+            <input type="number" name="quantity" th:value="${part.quantity}" required />
+
+            <button type="submit">Обновить</button>
         </form>
-        <a href="/brands" class="btn btn-secondary">Вернуться к брендам</a>
+
+        <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts'}">Вернуться к запчастям</a>
     </div>
 </body>
 </html>

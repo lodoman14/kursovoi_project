@@ -14,10 +14,13 @@ public class CarPart {
     private String partName;
 
     @Column(nullable = false)
-    private String articleNumber; // Артикул
+    private String articleNumber;
 
     @Column(nullable = false)
-    private Double price; // Цена
+    private Double price;
+
+    @Column(nullable = false)
+    private Integer quantity; // Остаток запчастей
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "model_id", nullable = false)
@@ -25,14 +28,14 @@ public class CarPart {
 
     public CarPart() {}
 
-    public CarPart(String partName, String articleNumber, Double price, CarModel carModel) {
+    public CarPart(String partName, String articleNumber, Double price, Integer quantity, CarModel carModel) {
         this.partName = partName;
         this.articleNumber = articleNumber;
         this.price = price;
+        this.quantity = quantity;
         this.carModel = carModel;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -65,6 +68,14 @@ public class CarPart {
         this.price = price;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public CarModel getCarModel() {
         return carModel;
     }
@@ -73,4 +84,3 @@ public class CarPart {
         this.carModel = carModel;
     }
 }
-

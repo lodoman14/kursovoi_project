@@ -5,24 +5,23 @@
     <link rel="stylesheet" th:href="@{/css/parts/parts.css}" />
 </head>
 <body>
-    <h2>Запчасти для модели: <span th:text="${carModel.modelName}"></span></h2>
-    <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/new'}">Добавить новую запчасть</a>
+    <div class="container">
+        <h2>Запчасти для модели: <span th:text="${carModel.modelName}"></span></h2>
+        <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/new'}">Добавить новую запчасть</a>
 
-    <ul>
-        <li th:each="part : ${parts}">
-            <span>Наименование: </span><span th:text="${part.partName}"></span>
-            <br/>
-            <span>Артикул: </span><span th:text="${part.articleNumber}"></span>
-            <br/>
-            <span>Цена: </span><span th:text="${part.price}"></span>
-            <br/>
-            <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/edit/' + ${part.id}}">Редактировать</a>
-            <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/delete/' + ${part.id}}">Удалить</a>
-        </li>
-    </ul>
+        <ul>
+            <li th:each="part : ${parts}">
+                <span>Наименование: </span><span th:text="${part.partName}"></span><br/>
+                <span>Артикул: </span><span th:text="${part.articleNumber}"></span><br/>
+                <span>Цена: </span><span th:text="${part.price}"></span><br/>
+                <span>Остаток: </span><span th:text="${part.quantity}"></span><br/>
 
-    <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models'}">Вернуться к моделям</a>
-    <a th:href="@{/brands}">Вернуться к маркам</a>
+                <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/edit/' + ${part.id}}">Редактировать</a>
+                <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/delete/' + ${part.id}}">Удалить</a>
+            </li>
+        </ul>
+
+        <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models'}">Вернуться к моделям</a>
+    </div>
 </body>
 </html>
-

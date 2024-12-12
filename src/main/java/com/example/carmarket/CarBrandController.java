@@ -51,5 +51,18 @@ public class CarBrandController {
         carBrandService.deleteBrand(id);
         return "redirect:/brands";
     }
-}
 
+    @GetMapping("/{id}/create-invoice")
+    public String createInvoice(@PathVariable("id") Long id, Model model) {
+        // Заглушка для перехода на страницу создания счета
+        model.addAttribute("brandId", id);
+        return "create_invoice"; // Шаблон создадим позже
+    }
+
+    @GetMapping("/{id}/orders")
+    public String viewOrders(@PathVariable("id") Long id, Model model) {
+        // Заглушка для страницы заказов
+        model.addAttribute("brandId", id);
+        return "orders"; // Шаблон создадим позже
+    }
+}

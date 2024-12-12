@@ -1,23 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Редактировать запчасть</title>
     <link rel="stylesheet" th:href="@{/css/parts/edit_part.css}" />
 </head>
-<h2>Редактировать запчасть для модели: <span th:text="${carModel.modelName}"></span></h2>
 
-<form th:action="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/update/' + ${part.id}}" method="post">
-    <label>Наименование:</label>
-    <input type="text" name="partName" th:value="${part.partName}" required />
-    <br/>
+<body>
+    <div class="container">
+        <h2>Редактировать запчасть для модели: <span th:text="${carModel.modelName}"></span></h2>
+        <form th:action="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/update/' + ${part.id}}" method="post">
+            <label>Наименование:</label>
+            <input type="text" name="partName" th:value="${part.partName}" required />
 
-    <label>Артикул:</label>
-    <input type="text" name="articleNumber" th:value="${part.articleNumber}" required />
-    <br/>
+            <label>Артикул:</label>
+            <input type="text" name="articleNumber" th:value="${part.articleNumber}" required />
 
-    <label>Цена:</label>
-    <input type="number" name="price" th:value="${part.price}" step="0.01" required />
-    <br/>
+            <label>Цена:</label>
+            <input type="number" name="price" th:value="${part.price}" step="0.01" required />
 
-    <button type="submit">Обновить</button>
-</form>
+            <label>Остаток:</label>
+            <input type="number" name="quantity" th:value="${part.quantity}" required />
 
-<a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts'}">Вернуться к запчастям</a>
+            <button type="submit">Обновить</button>
+        </form>
+
+        <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts'}">Вернуться к запчастям</a>
+    </div>
+</body>
+</html>

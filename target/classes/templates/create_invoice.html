@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Создать счет</title>
+    <link rel="stylesheet" type="text/css" href="/css/invoice/create_invoice.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Создать счет</h2>
+        <form th:action="@{/invoices/save}" method="post">
+            <label>ФИО клиента:</label>
+            <input type="text" name="fullName" required />
+
+            <label>Почта клиента:</label>
+            <input type="email" name="email" required />
+
+            <label>Номер телефона клиента:</label>
+            <input type="text" name="phone" required />
+
+            <label>Адрес доставки клиента:</label>
+            <input type="text" name="address" required />
+
+            <h3>Выберите запчасти:</h3>
+            <div id="parts-container">
+                <div class="part-row">
+                    <label>Бренд:</label>
+                    <select class="brand-select">
+                        <option value="">Выберите бренд</option>
+                        <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.brandName}"></option>
+                    </select>
+
+                    <label>Модель:</label>
+                    <select class="model-select" disabled>
+                        <option value="">Сначала выберите бренд</option>
+                    </select>
+
+                    <label>Запчасть:</label>
+                    <select name="selectedParts" class="part-select" disabled>
+                        <option value="">Сначала выберите модель</option>
+                    </select>
+
+                    <label>Количество:</label>
+                    <input type="number" name="quantities" class="quantity-input" min="1" />
+                </div>
+            </div>
+            <button type="button" id="add-part">Добавить строку</button>
+            <button type="submit">Сформировать заказ</button>
+        </form>
+
+        <a href="/brands">Вернуться к брендам</a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Обработчик для выбора бренда
+            $(document).on("change", ".brand-select", function () {
+                const brandId = $(this).val();
+                const modelSelect = $(this).closest(".part-row").find(".model-select");
+                modelSelect.prop("disabled", true).empty().append('<option value="">Выберите модель</option>');
+
+                if (brandId) {
+                    $.getJSON("/invoices/models?brandId=" + brandId, function (models) {
+                        models.forEach(model => {
+                            modelSelect.append(`<option value="${model.id}">${model.modelName}</option>`);
+                        });
+                        modelSelect.prop("disabled", false);
+                    });
+                }
+            });
+
+            // Обработчик для выбора модели
+            $(document).on("change", ".model-select", function () {
+                const modelId = $(this).val();
+                const partSelect = $(this).closest(".part-row").find(".part-select");
+                partSelect.prop("disabled", true).empty().append('<option value="">Выберите запчасть</option>');
+
+                if (modelId) {
+                    $.getJSON("/invoices/parts?modelId=" + modelId, function (parts) {
+                        parts.forEach(part => {
+                            partSelect.append(`<option value="${part.id}">${part.partName}</option>`);
+                        });
+                        partSelect.prop("disabled", false);
+                    });
+                }
+            });
+
+            // Добавление новой строки
+            $("#add-part").click(function () {
+                const newRow = $(".part-row:first").clone();
+                newRow.find("select, input").val("").prop("disabled", true);
+                newRow.find(".brand-select").prop("disabled", false);
+                $("#parts-container").append(newRow);
+            });
+        });
+    </script>
+</body>
+</html>

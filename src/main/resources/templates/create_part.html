@@ -1,24 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Добавить запчасть</title>
     <link rel="stylesheet" th:href="@{/css/parts/create_part.css}" />
 </head>
 
-<h2>Добавить новую запчасть для модели: <span th:text="${carModel.modelName}"></span></h2>
-<form th:action="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/save'}" method="post">
-    <label>Наименование:</label>
-    <input type="text" name="partName" placeholder="Название запчасти" required />
-    <br/>
+<body>
+    <div class="container">
+        <h2>Добавить новую запчасть для модели: <span th:text="${carModel.modelName}"></span></h2>
+        <form th:action="@{'/brands/' + ${carModel.carBrand.id} + '/models/' + ${carModel.id} + '/parts/save'}" method="post">
+            <label>Наименование:</label>
+            <input type="text" name="partName" placeholder="Название запчасти" required />
 
-    <label>Артикул:</label>
-    <input type="text" name="articleNumber" placeholder="Артикул" required />
-    <br/>
+            <label>Артикул:</label>
+            <input type="text" name="articleNumber" placeholder="Артикул" required />
 
-    <label>Цена:</label>
-    <input type="number" name="price" placeholder="Цена" step="0.01" required />
-    <br/>
+            <label>Цена:</label>
+            <input type="number" name="price" placeholder="Цена" step="0.01" required />
 
-    <button type="submit">Сохранить</button>
-</form>
+            <label>Остаток:</label>
+            <input type="number" name="quantity" placeholder="Количество" required />
 
-<a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models'}">Вернуться к моделям</a>
+            <button type="submit">Сохранить</button>
+        </form>
 
+        <a th:href="@{'/brands/' + ${carModel.carBrand.id} + '/models'}">Вернуться к моделям</a>
+    </div>
+</body>
+</html>
