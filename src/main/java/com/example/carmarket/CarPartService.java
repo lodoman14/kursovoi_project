@@ -26,4 +26,3 @@ public class CarPartService {
         carPartRepository.deleteById(id);
     }
 }
-

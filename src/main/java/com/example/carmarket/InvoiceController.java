@@ -35,15 +35,31 @@ public class InvoiceController {
     public String saveInvoice(
             @ModelAttribute("invoice") Invoice invoice,
             @RequestParam("selectedParts") List<Long> selectedParts,
-            @RequestParam("quantities") List<String> quantities) {
+            @RequestParam("quantities") List<Integer> quantities,
+            Model model) {
 
         List<CarPart> parts = new ArrayList<>();
+
         for (int i = 0; i < selectedParts.size(); i++) {
-            if (!quantities.get(i).isEmpty()) {
-                CarPart part = carPartService.getPartById(selectedParts.get(i));
-                if (part != null) {
-                    parts.add(part);
+            Long partId = selectedParts.get(i);
+            Integer requestedQuantity = quantities.get(i);
+
+            CarPart part = carPartService.getPartById(partId);
+
+            if (part != null) {
+                if (requestedQuantity > part.getQuantity()) {
+                    model.addAttribute("invoice", invoice);
+                    model.addAttribute("brands", carBrandService.getAllBrands());
+                    model.addAttribute("error", "Запрашиваемое количество запчасти \"" + part.getPartName() +
+                            "\" превышает остаток на складе (" + part.getQuantity() + ").");
+                    return "create_invoice";
                 }
+
+                // Уменьшаем остаток на складе
+                part.setQuantity(part.getQuantity() - requestedQuantity);
+                carPartService.savePart(part);
+
+                parts.add(part);
             }
         }
 
