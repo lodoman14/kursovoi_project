@@ -28,20 +28,22 @@ public class InvoiceController {
     public String showCreateInvoiceForm(Model model) {
         model.addAttribute("invoice", new Invoice());
         model.addAttribute("brands", carBrandService.getAllBrands());
-        return "create_invoice"; // Шаблон create_invoice.html
+        return "create_invoice";
     }
 
     @PostMapping("/save")
     public String saveInvoice(
             @ModelAttribute("invoice") Invoice invoice,
             @RequestParam("selectedParts") List<Long> selectedParts,
-            @RequestParam("quantities") List<Integer> quantities) {
+            @RequestParam("quantities") List<String> quantities) {
 
         List<CarPart> parts = new ArrayList<>();
         for (int i = 0; i < selectedParts.size(); i++) {
-            CarPart part = carPartService.getPartById(selectedParts.get(i));
-            if (part != null) {
-                parts.add(part);
+            if (!quantities.get(i).isEmpty()) {
+                CarPart part = carPartService.getPartById(selectedParts.get(i));
+                if (part != null) {
+                    parts.add(part);
+                }
             }
         }
 
@@ -59,6 +61,11 @@ public class InvoiceController {
     @GetMapping("/parts")
     @ResponseBody
     public List<CarPart> getPartsByModel(@RequestParam("modelId") Long modelId) {
-        return carPartService.getPartsByModel(carModelService.getModelById(modelId));
+        CarModel carModel = carModelService.getModelById(modelId);
+        List<CarPart> parts = carPartService.getPartsByModel(carModel);
+        parts.forEach(part -> {
+            part.getCarModel().getModelName(); // Инициализация Lazy Loading
+        });
+        return parts;
     }
 }

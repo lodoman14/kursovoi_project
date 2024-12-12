@@ -1,5 +1,6 @@
 package com.example.carmarket;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,22 +21,16 @@ public class CarPart {
     private Double price;
 
     @Column(nullable = false)
-    private Integer quantity; // Остаток запчастей
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "model_id", nullable = false)
+    @JsonIgnore
     private CarModel carModel;
 
     public CarPart() {}
 
-    public CarPart(String partName, String articleNumber, Double price, Integer quantity, CarModel carModel) {
-        this.partName = partName;
-        this.articleNumber = articleNumber;
-        this.price = price;
-        this.quantity = quantity;
-        this.carModel = carModel;
-    }
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
