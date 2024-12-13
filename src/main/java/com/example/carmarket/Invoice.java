@@ -23,22 +23,17 @@ public class Invoice {
     @Column(nullable = false)
     private String address;
 
-    @ManyToMany
-    @JoinTable(
-        name = "invoice_parts",
-        joinColumns = @JoinColumn(name = "invoice_id"),
-        inverseJoinColumns = @JoinColumn(name = "part_id")
-    )
-    private List<CarPart> parts;
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InvoiceItem> items;
 
     public Invoice() {}
 
-    public Invoice(String fullName, String email, String phone, String address, List<CarPart> parts) {
+    public Invoice(String fullName, String email, String phone, String address, List<InvoiceItem> items) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.parts = parts;
+        this.items = items;
     }
 
     // Getters and Setters
@@ -82,11 +77,11 @@ public class Invoice {
         this.address = address;
     }
 
-    public List<CarPart> getParts() {
-        return parts;
+    public List<InvoiceItem> getItems() {
+        return items;
     }
 
-    public void setParts(List<CarPart> parts) {
-        this.parts = parts;
+    public void setItems(List<InvoiceItem> items) {
+        this.items = items;
     }
 }

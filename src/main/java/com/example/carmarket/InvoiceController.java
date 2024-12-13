@@ -38,7 +38,7 @@ public class InvoiceController {
             @RequestParam("quantities") List<Integer> quantities,
             Model model) {
 
-        List<CarPart> parts = new ArrayList<>();
+        List<InvoiceItem> invoiceItems = new ArrayList<>();
 
         for (int i = 0; i < selectedParts.size(); i++) {
             Long partId = selectedParts.get(i);
@@ -55,15 +55,15 @@ public class InvoiceController {
                     return "create_invoice";
                 }
 
-                // Уменьшаем остаток на складе
+                InvoiceItem item = new InvoiceItem(invoice, part, requestedQuantity, part.getPrice() * requestedQuantity);
+                invoiceItems.add(item);
+
                 part.setQuantity(part.getQuantity() - requestedQuantity);
                 carPartService.savePart(part);
-
-                parts.add(part);
             }
         }
 
-        invoice.setParts(parts);
+        invoice.setItems(invoiceItems);
         invoiceService.saveInvoice(invoice);
         return "redirect:/brands";
     }
@@ -80,7 +80,7 @@ public class InvoiceController {
         CarModel carModel = carModelService.getModelById(modelId);
         List<CarPart> parts = carPartService.getPartsByModel(carModel);
         parts.forEach(part -> {
-            part.getCarModel().getModelName(); // Инициализация Lazy Loading
+            part.getCarModel().getModelName(); // Lazy loading
         });
         return parts;
     }
@@ -94,9 +94,8 @@ public class InvoiceController {
             return "orders";
         }
 
-        // Подсчитываем общую сумму заказа
-        double totalSum = invoice.getParts().stream()
-                .mapToDouble(part -> part.getPrice() * part.getQuantity())
+        double totalSum = invoice.getItems().stream()
+                .mapToDouble(InvoiceItem::getTotalPrice)
                 .sum();
 
         model.addAttribute("invoice", invoice);

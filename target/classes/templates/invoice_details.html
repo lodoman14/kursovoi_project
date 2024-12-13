@@ -2,50 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Детали заказа</title>
-    <link rel="stylesheet" type="text/css" href="/css/invoices/invoice_details.css">
+    <link rel="stylesheet" type="text/css" href="/css/invoice/invoice_details.css">
 </head>
 <body>
     <div class="container">
         <h2>Детали заказа №<span th:text="${invoice.id}"></span></h2>
 
-        <div class="client-info">
-            <h3>Информация о клиенте</h3>
-            <p><strong>ФИО:</strong> <span th:text="${invoice.fullName}"></span></p>
-            <p><strong>Номер телефона:</strong> <span th:text="${invoice.phone}"></span></p>
-            <p><strong>Email:</strong> <span th:text="${invoice.email}"></span></p>
-            <p><strong>Адрес доставки:</strong> <span th:text="${invoice.address}"></span></p>
-        </div>
+        <h3>Информация о клиенте</h3>
+        <p>ФИО: <span th:text="${invoice.fullName}"></span></p>
+        <p>Номер телефона: <span th:text="${invoice.phone}"></span></p>
+        <p>Email: <span th:text="${invoice.email}"></span></p>
+        <p>Адрес доставки: <span th:text="${invoice.address}"></span></p>
 
-        <div class="order-parts">
-            <h3>Товары в заказе</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Марка</th>
-                        <th>Модель</th>
-                        <th>Запчасть</th>
-                        <th>Количество</th>
-                        <th>Цена (за штуку)</th>
-                        <th>Итого</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="part : ${invoice.parts}">
-                        <td th:text="${part.carModel.carBrand.brandName}"></td>
-                        <td th:text="${part.carModel.modelName}"></td>
-                        <td th:text="${part.partName}"></td>
-                        <td th:text="${part.quantity}"></td>
-                        <td th:text="${part.price}"></td>
-                        <td th:text="${part.price * part.quantity}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <h3>Товары в заказе</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Марка</th>
+                    <th>Модель</th>
+                    <th>Запчасть</th>
+                    <th>Количество</th>
+                    <th>Цена (за штуку)</th>
+                    <th>Итого</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${invoice.items}">
+                    <td th:text="${item.carPart.carModel.brand.brandName}"></td>
+                    <td th:text="${item.carPart.carModel.modelName}"></td>
+                    <td th:text="${item.carPart.partName}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="${item.carPart.price}"></td>
+                    <td th:text="${item.totalPrice}"></td>
+                </tr>
+            </tbody>
+        </table>
 
-        <div class="total-sum">
-            <h3>Общая сумма заказа:</h3>
-            <p><strong><span th:text="${totalSum}"></span> руб.</strong></p>
-        </div>
+        <h3>Общая сумма заказа:</h3>
+        <p><span th:text="${totalSum}"></span> руб.</p>
 
         <a href="/brands/orders" class="btn-back">Вернуться к списку заказов</a>
     </div>
