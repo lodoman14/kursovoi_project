@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список заказов</title>
+    <link rel="stylesheet" type="text/css" href="/css/orders/orders.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Список заказов</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>ФИО клиента</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td><a th:href="@{'/invoices/' + ${order.id}}" th:text="${order.id}"></a></td>
+                    <td th:text="${order.fullName}"></td>
+                    <td>
+                        <button class="status-button">Статус</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/brands" class="btn-back">Вернуться к брендам</a>
+    </div>
+</body>
+</html>

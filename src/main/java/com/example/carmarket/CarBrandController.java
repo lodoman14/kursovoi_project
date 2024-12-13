@@ -12,6 +12,9 @@ public class CarBrandController {
     @Autowired
     private CarBrandService carBrandService;
 
+    @Autowired
+    private InvoiceService invoiceService;
+
     @GetMapping
     public String listBrands(Model model) {
         model.addAttribute("brands", carBrandService.getAllBrands());
@@ -54,15 +57,13 @@ public class CarBrandController {
 
     @GetMapping("/{id}/create-invoice")
     public String createInvoice(@PathVariable("id") Long id, Model model) {
-        // Заглушка для перехода на страницу создания счета
         model.addAttribute("brandId", id);
-        return "create_invoice"; // Шаблон создадим позже
+        return "create_invoice";
     }
 
-    @GetMapping("/{id}/orders")
-    public String viewOrders(@PathVariable("id") Long id, Model model) {
-        // Заглушка для страницы заказов
-        model.addAttribute("brandId", id);
-        return "orders"; // Шаблон создадим позже
+    @GetMapping("/orders")
+    public String listOrders(Model model) {
+        model.addAttribute("orders", invoiceService.getAllInvoices());
+        return "orders"; // Ссылка на шаблон orders.html
     }
 }
