@@ -2,19 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Детали заказа</title>
-    <link rel="stylesheet" type="text/css" href="/css/invoice/invoice_details.css">
 </head>
 <body>
-    <div class="container">
+    <div>
         <h2>Детали заказа №<span th:text="${invoice.id}"></span></h2>
 
         <h3>Информация о клиенте</h3>
         <p>ФИО: <span th:text="${invoice.fullName}"></span></p>
-        <p>Номер телефона: <span th:text="${invoice.phone}"></span></p>
+        <p>Телефон: <span th:text="${invoice.phone}"></span></p>
         <p>Email: <span th:text="${invoice.email}"></span></p>
-        <p>Адрес доставки: <span th:text="${invoice.address}"></span></p>
+        <p>Адрес: <span th:text="${invoice.address}"></span></p>
 
-        <h3>Товары в заказе</h3>
+        <h3>Товары</h3>
         <table>
             <thead>
                 <tr>
@@ -22,13 +21,13 @@
                     <th>Модель</th>
                     <th>Запчасть</th>
                     <th>Количество</th>
-                    <th>Цена (за штуку)</th>
+                    <th>Цена</th>
                     <th>Итого</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="item : ${invoice.items}">
-                    <td th:text="${item.carPart.carModel.brand.brandName}"></td>
+                    <td th:text="${item.carPart.carModel.carBrand.brandName}"></td>
                     <td th:text="${item.carPart.carModel.modelName}"></td>
                     <td th:text="${item.carPart.partName}"></td>
                     <td th:text="${item.quantity}"></td>
@@ -38,10 +37,8 @@
             </tbody>
         </table>
 
-        <h3>Общая сумма заказа:</h3>
-        <p><span th:text="${totalSum}"></span> руб.</p>
-
-        <a href="/brands/orders" class="btn-back">Вернуться к списку заказов</a>
+        <h3>Общая сумма:</h3>
+        <p th:text="${totalSum}"></p>
     </div>
 </body>
 </html>
