@@ -84,4 +84,24 @@ public class InvoiceController {
         });
         return parts;
     }
+
+    @GetMapping("/{id}")
+    public String viewInvoiceDetails(@PathVariable("id") Long id, Model model) {
+        Invoice invoice = invoiceService.getInvoiceById(id);
+
+        if (invoice == null) {
+            model.addAttribute("error", "Заказ не найден.");
+            return "orders";
+        }
+
+        // Подсчитываем общую сумму заказа
+        double totalSum = invoice.getParts().stream()
+                .mapToDouble(part -> part.getPrice() * part.getQuantity())
+                .sum();
+
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("totalSum", totalSum);
+
+        return "invoice_details";
+    }
 }

@@ -63,7 +63,8 @@ public class CarBrandController {
 
     @GetMapping("/orders")
     public String listOrders(Model model) {
+        // Убедимся, что данные добавляются в модель только один раз
         model.addAttribute("orders", invoiceService.getAllInvoices());
-        return "orders"; // Ссылка на шаблон orders.html
+        return "orders";
     }
 }
