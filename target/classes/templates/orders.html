@@ -7,7 +7,7 @@
 <body>
     <div class="container">
         <h2>Список заказов</h2>
-        <form action="/invoices/updateAll" method="post">
+        <form id="updateStatusesForm" th:action="@{/invoices/updateStatuses}" method="post">
             <table class="order-table">
                 <thead>
                     <tr>
@@ -18,12 +18,11 @@
                 </thead>
                 <tbody>
                     <tr th:each="order : ${orders}">
-                        <td>
-                            <a th:href="@{'/invoices/' + ${order.id}}" th:text="${order.id}" class="order-link"></a>
-                        </td>
+                        <td><a th:href="@{'/invoices/' + ${order.id}}" th:text="${order.id}" class="order-link"></a></td>
                         <td th:text="${order.fullName}"></td>
                         <td>
-                            <select name="status[${order.id}]" class="status-select">
+                            <input type="hidden" name="ids" th:value="${order.id}" />
+                            <select name="statuses" class="status-select">
                                 <option th:selected="${order.status == 'Ожидается оплата'}" value="Ожидается оплата">Ожидается оплата</option>
                                 <option th:selected="${order.status == 'Оплата получена'}" value="Оплата получена">Оплата получена</option>
                                 <option th:selected="${order.status == 'Сборка товара'}" value="Сборка товара">Сборка товара</option>
