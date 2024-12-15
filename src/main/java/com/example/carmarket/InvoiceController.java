@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/invoices")
@@ -112,9 +113,28 @@ public class InvoiceController {
         return "orders";
     }
 
-    @PostMapping("/{id}/status")
-    public String updateStatus(@PathVariable("id") Long id, @RequestParam("status") String status) {
-        invoiceService.updateInvoiceStatus(id, status);
+    @PostMapping("/updateAll")
+    public String updateAllStatuses(@RequestParam Map<String, String> allParams) {
+        List<Invoice> invoicesToUpdate = new ArrayList<>();
+
+        allParams.forEach((key, value) -> {
+            if (key.startsWith("status[")) {
+                try {
+                    Long id = Long.parseLong(key.substring(7, key.length() - 1)); // Извлекаем ID
+                    Invoice invoice = invoiceService.getInvoiceById(id);
+                    if (invoice != null) {
+                        invoice.setStatus(value); // Устанавливаем новый статус
+                        invoicesToUpdate.add(invoice);
+                    }
+                } catch (NumberFormatException e) {
+                    // Логируем ошибку для отладки, если что-то пошло не так
+                    System.err.println("Ошибка парсинга ID заказа: " + key);
+                }
+            }
+        });
+
+        // Сохраняем все изменения в базе данных
+        invoiceService.saveAllInvoices(invoicesToUpdate);
         return "redirect:/invoices/orders";
     }
 }
