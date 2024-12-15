@@ -64,6 +64,7 @@ public class InvoiceController {
         }
 
         invoice.setItems(invoiceItems);
+        invoice.setStatus("Ожидается оплата"); // Устанавливаем начальный статус заказа
         invoiceService.saveInvoice(invoice);
         return "redirect:/brands";
     }
@@ -102,6 +103,19 @@ public class InvoiceController {
         model.addAttribute("totalSum", totalSum);
 
         return "invoice_details";
+    }
+
+    @GetMapping("/orders")
+    public String listOrders(Model model) {
+        List<Invoice> orders = invoiceService.getSortedInvoices();
+        model.addAttribute("orders", orders);
+        return "orders";
+    }
+
+    @PostMapping("/{id}/status")
+    public String updateStatus(@PathVariable("id") Long id, @RequestParam("status") String status) {
+        invoiceService.updateInvoiceStatus(id, status);
+        return "redirect:/invoices/orders";
     }
 }
 

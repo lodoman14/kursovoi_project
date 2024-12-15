@@ -14,6 +14,10 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
+    public List<Invoice> getSortedInvoices() {
+        return invoiceRepository.findAllSortedByStatus();
+    }
+
     public void saveInvoice(Invoice invoice) {
         invoiceRepository.save(invoice);
     }
@@ -21,4 +25,13 @@ public class InvoiceService {
     public Invoice getInvoiceById(Long id) {
         return invoiceRepository.findById(id).orElse(null);
     }
+
+    public void updateInvoiceStatus(Long id, String status) {
+        Invoice invoice = getInvoiceById(id);
+        if (invoice != null) {
+            invoice.setStatus(status);
+            saveInvoice(invoice);
+        }
+    }
 }
+

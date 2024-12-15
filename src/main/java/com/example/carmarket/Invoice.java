@@ -23,10 +23,15 @@ public class Invoice {
     @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
+    private String status;
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceItem> items;
 
-    public Invoice() {}
+    public Invoice() {
+        this.status = "Ожидается оплата"; // Новый заказ начинается с этого статуса
+    }
 
     public Invoice(String fullName, String email, String phone, String address, List<InvoiceItem> items) {
         this.fullName = fullName;
@@ -34,6 +39,7 @@ public class Invoice {
         this.phone = phone;
         this.address = address;
         this.items = items;
+        this.status = "Ожидается оплата"; // Новый заказ начинается с этого статуса
     }
 
     // Getters and Setters
@@ -77,6 +83,14 @@ public class Invoice {
         this.address = address;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<InvoiceItem> getItems() {
         return items;
     }
@@ -85,3 +99,4 @@ public class Invoice {
         this.items = items;
     }
 }
+

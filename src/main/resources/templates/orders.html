@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Список заказов</title>
-    <link rel="stylesheet" type="text/css" href="/css/orders/orders.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div>
         <h2>Список заказов</h2>
         <table>
             <thead>
@@ -20,12 +20,35 @@
                     <td><a th:href="@{'/invoices/' + ${order.id}}" th:text="${order.id}"></a></td>
                     <td th:text="${order.fullName}"></td>
                     <td>
-                        <button class="status-button">Статус</button>
+                        <select onchange="updateStatus(this, [[${order.id}]])">
+                            <option th:selected="${order.status == 'Ожидается оплата'}" value="Ожидается оплата">Ожидается оплата</option>
+                            <option th:selected="${order.status == 'Оплата получена'}" value="Оплата получена">Оплата получена</option>
+                            <option th:selected="${order.status == 'Сборка товара'}" value="Сборка товара">Сборка товара</option>
+                            <option th:selected="${order.status == 'Заказ собран'}" value="Заказ собран">Заказ собран</option>
+                            <option th:selected="${order.status == 'Доставка до клиента'}" value="Доставка до клиента">Доставка до клиента</option>
+                            <option th:selected="${order.status == 'Доставлен'}" value="Доставлен">Доставлен</option>
+                            <option th:selected="${order.status == 'Завершён'}" value="Завершён">Завершён</option>
+                        </select>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <a href="/brands" class="btn-back">Вернуться к брендам</a>
+        <a href="/brands">Вернуться к брендам</a>
     </div>
+
+    <script>
+        function updateStatus(select, orderId) {
+            const status = select.value;
+            $.post(`/invoices/${orderId}/status`, { status: status })
+                .done(() => {
+                    alert("Статус обновлен!");
+                    location.reload();
+                })
+                .fail(() => {
+                    alert("Ошибка обновления статуса.");
+                });
+        }
+    </script>
 </body>
 </html>
+
