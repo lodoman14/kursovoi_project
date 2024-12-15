@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/invoices")
@@ -65,7 +64,7 @@ public class InvoiceController {
         }
 
         invoice.setItems(invoiceItems);
-        invoice.setStatus("Ожидается оплата"); // Устанавливаем начальный статус заказа
+        invoice.setStatus("Ожидается оплата");
         invoiceService.saveInvoice(invoice);
         return "redirect:/brands";
     }
@@ -82,7 +81,7 @@ public class InvoiceController {
         CarModel carModel = carModelService.getModelById(modelId);
         List<CarPart> parts = carPartService.getPartsByModel(carModel);
         parts.forEach(part -> {
-            part.getCarModel().getModelName(); // Lazy loading
+            part.getCarModel().getModelName();
         });
         return parts;
     }
@@ -113,28 +112,13 @@ public class InvoiceController {
         return "orders";
     }
 
-    @PostMapping("/updateAll")
-    public String updateAllStatuses(@RequestParam Map<String, String> allParams) {
-        List<Invoice> invoicesToUpdate = new ArrayList<>();
-
-        allParams.forEach((key, value) -> {
-            if (key.startsWith("status[")) {
-                try {
-                    Long id = Long.parseLong(key.substring(7, key.length() - 1)); // Извлекаем ID
-                    Invoice invoice = invoiceService.getInvoiceById(id);
-                    if (invoice != null) {
-                        invoice.setStatus(value); // Устанавливаем новый статус
-                        invoicesToUpdate.add(invoice);
-                    }
-                } catch (NumberFormatException e) {
-                    // Логируем ошибку для отладки, если что-то пошло не так
-                    System.err.println("Ошибка парсинга ID заказа: " + key);
-                }
-            }
-        });
-
-        // Сохраняем все изменения в базе данных
-        invoiceService.saveAllInvoices(invoicesToUpdate);
+    @PostMapping("/updateStatuses")
+    public String updateStatuses(@RequestParam("ids") List<Long> ids, @RequestParam("statuses") List<String> statuses) {
+        for (int i = 0; i < ids.size(); i++) {
+            Long id = ids.get(i);
+            String status = statuses.get(i);
+            invoiceService.updateInvoiceStatus(id, status);
+        }
         return "redirect:/invoices/orders";
     }
 }

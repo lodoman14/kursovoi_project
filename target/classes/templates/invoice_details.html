@@ -2,19 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Детали заказа</title>
+    <link rel="stylesheet" th:href="@{/css/invoice_details.css}" />
 </head>
 <body>
-    <div>
+    <div class="container">
         <h2>Детали заказа №<span th:text="${invoice.id}"></span></h2>
 
-        <h3>Информация о клиенте</h3>
-        <p>ФИО: <span th:text="${invoice.fullName}"></span></p>
-        <p>Телефон: <span th:text="${invoice.phone}"></span></p>
-        <p>Email: <span th:text="${invoice.email}"></span></p>
-        <p>Адрес: <span th:text="${invoice.address}"></span></p>
+        <div class="client-info">
+            <h3>Информация о клиенте</h3>
+            <p><strong>ФИО:</strong> <span th:text="${invoice.fullName}"></span></p>
+            <p><strong>Телефон:</strong> <span th:text="${invoice.phone}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${invoice.email}"></span></p>
+            <p><strong>Адрес:</strong> <span th:text="${invoice.address}"></span></p>
+        </div>
 
         <h3>Товары</h3>
-        <table>
+        <table class="product-table">
             <thead>
                 <tr>
                     <th>Марка</th>
@@ -37,8 +40,12 @@
             </tbody>
         </table>
 
-        <h3>Общая сумма:</h3>
-        <p th:text="${totalSum}"></p>
+        <div class="total">
+            <h3>Общая сумма:</h3>
+            <p th:text="${totalSum}"></p>
+        </div>
+        <a href="/invoices/orders" class="btn-secondary">Назад к заказам</a>
     </div>
 </body>
 </html>
+

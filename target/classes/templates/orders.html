@@ -1,30 +1,45 @@
-<form action="/invoices/updateAll" method="post">
-    <table>
-        <thead>
-            <tr>
-                <th>№ заказа</th>
-                <th>ФИО клиента</th>
-                <th>Статус</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="order : ${orders}">
-                <td><a th:href="@{'/invoices/' + ${order.id}}" th:text="${order.id}"></a></td>
-                <td th:text="${order.fullName}"></td>
-                <td>
-                    <select name="status[${order.id}]">
-                        <option th:selected="${order.status == 'Ожидается оплата'}" value="Ожидается оплата">Ожидается оплата</option>
-                        <option th:selected="${order.status == 'Оплата получена'}" value="Оплата получена">Оплата получена</option>
-                        <option th:selected="${order.status == 'Сборка товара'}" value="Сборка товара">Сборка товара</option>
-                        <option th:selected="${order.status == 'Заказ собран'}" value="Заказ собран">Заказ собран</option>
-                        <option th:selected="${order.status == 'Доставка до клиента'}" value="Доставка до клиента">Доставка до клиента</option>
-                        <option th:selected="${order.status == 'Доставлен'}" value="Доставлен">Доставлен</option>
-                        <option th:selected="${order.status == 'Завершён'}" value="Завершён">Завершён</option>
-                    </select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="submit">Применить</button>
-</form>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список заказов</title>
+    <link rel="stylesheet" th:href="@{/css/orders.css}" />
+</head>
+<body>
+    <div class="container">
+        <h2>Список заказов</h2>
+        <form action="/invoices/updateAll" method="post">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>№ заказа</th>
+                        <th>ФИО клиента</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td>
+                            <a th:href="@{'/invoices/' + ${order.id}}" th:text="${order.id}" class="order-link"></a>
+                        </td>
+                        <td th:text="${order.fullName}"></td>
+                        <td>
+                            <select name="status[${order.id}]" class="status-select">
+                                <option th:selected="${order.status == 'Ожидается оплата'}" value="Ожидается оплата">Ожидается оплата</option>
+                                <option th:selected="${order.status == 'Оплата получена'}" value="Оплата получена">Оплата получена</option>
+                                <option th:selected="${order.status == 'Сборка товара'}" value="Сборка товара">Сборка товара</option>
+                                <option th:selected="${order.status == 'Заказ собран'}" value="Заказ собран">Заказ собран</option>
+                                <option th:selected="${order.status == 'Доставка до клиента'}" value="Доставка до клиента">Доставка до клиента</option>
+                                <option th:selected="${order.status == 'Доставлен'}" value="Доставлен">Доставлен</option>
+                                <option th:selected="${order.status == 'Завершён'}" value="Завершён">Завершён</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="btn-submit">Применить</button>
+        </form>
+        <a href="/brands" class="btn-secondary">Вернуться к брендам</a>
+    </div>
+</body>
+</html>
 

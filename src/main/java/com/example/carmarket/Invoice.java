@@ -39,7 +39,7 @@ public class Invoice {
         this.phone = phone;
         this.address = address;
         this.items = items;
-        this.status = "Ожидается оплата";
+        this.status = "Ожидается оплата"; // Новый заказ начинается с этого статуса
     }
 
     // Getters and Setters
@@ -99,4 +99,3 @@ public class Invoice {
         this.items = items;
     }
 }
-
